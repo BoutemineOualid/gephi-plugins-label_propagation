@@ -12,6 +12,7 @@ import org.gephi.clustering.spi.Clusterer;
 import org.gephi.graph.api.Graph;
 import org.gephi.graph.api.GraphModel;
 import org.gephi.graph.api.Node;
+import org.gephi.graph.api.NodeData;
 import org.gephi.graph.api.NodeIterator;
 import org.gephi.utils.longtask.spi.LongTask;
 import org.gephi.utils.progress.ProgressTicket;
@@ -44,7 +45,7 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
     // Colors values are the clusters.
     Map<Node, Color> nodeClusterMappings = new HashMap<Node, Color>();
     Random randomizer = new Random(System.currentTimeMillis());
-    
+    GraphColorizer graphColorizer = new GraphColorizer();
 
     @Override
     public void execute(GraphModel gm) {
@@ -69,11 +70,14 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
                 nodes.add(currentNode);
             }
 
-            // assigning each node to its cluster
+            // assigning each node to its own cluster
             for(Node node: nodes){
-                Color cluster = new Color().randomize();
+                Color colorRandomizer = new Color();
+                Color cluster = colorRandomizer.randomize();
                 nodeClusterMappings.put(node, cluster);
             }
+            if (isAnimationEnabled)
+                graphColorizer.colorizeNodes(nodeClusterMappings);
             
             if (progress != null) {
                 this.progress.progress(NbBundle.getMessage(LabelPropagationClusterer.class, "LabelPropagationClusterer.buildingClusters"));
@@ -93,16 +97,18 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
                     {
                         // highlighting the node.
                         node.getNodeData().setSize(node.getNodeData().getSize() * 1.5f);
-                        Thread.sleep(this.animationPauseMilliseconds);
+                        Thread.sleep(this.animationPauseMilliseconds / 2);
                     }
                     
                     
                     nodeClusterMappings.put(node, getPrevailingClusterInNeighbourhood(node, graph));
                     if (this.isAnimationEnabled)
                     {
-                        PrepareResults();
-                        Thread.sleep(this.animationPauseMilliseconds);
-                        node.getNodeData().setSize(node.getNodeData().getSize() / 1.5f);
+                        Color cluster = nodeClusterMappings.get(node);
+                        graphColorizer.colorizeNode(node, cluster);
+                        Thread.sleep(this.animationPauseMilliseconds / 2);
+                        NodeData nodeData = node.getNodeData();
+                        nodeData.setSize(node.getNodeData().getSize() / 1.5f);
                     }
                 }
             }
@@ -128,11 +134,10 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
         if (progress != null) {
             this.progress.progress(NbBundle.getMessage(LabelPropagationClusterer.class, "LabelPropagationClusterer.preparingResults"));
         }
+        
         result = getResultingClusters(nodeClusterMappings);
-        GraphColorizer c = new GraphColorizer();
-
-        if (result != null && result.size() > 0) {
-            c.colorizeGraph(result.toArray(new LabelPropagationCluster[0]));
+        if (result != null && result.size() > 0 && !isAnimationEnabled) {
+            graphColorizer.colorizeGraph(result.toArray(new LabelPropagationCluster[0]));
         }
     }
       

@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -19,12 +18,6 @@ import org.openide.util.NbBundle.Messages;
         dtd = "-//boutemineoualid.gephi.plugins.clustering.label_propagation//LabelPropagationSettingsPanel//EN",
         autostore = false
 )
-@TopComponent.Description(
-        preferredID = "LabelPropagationSettingsPanelTopComponent",
-        //iconBase="SET/PATH/TO/ICON/HERE", 
-        persistenceType = TopComponent.PERSISTENCE_ALWAYS
-)
-@TopComponent.Registration(mode = "layoutmode", openAtStartup = false)
 @ActionID(category = "Window", id = "boutemineoualid.gephi.plugins.clustering.label_propagation.LabelPropagationSettingsPanelTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
 @Messages({
@@ -36,8 +29,6 @@ public final class LabelPropagationSettingsPanel extends JPanel {
 
     public LabelPropagationSettingsPanel() {
         initComponents();
-        setName(Bundle.CTL_LabelPropagationSettingsPanelTopComponent());
-        setToolTipText(Bundle.HINT_LabelPropagationSettingsPanelTopComponent());
         this.txtAnimationTimeSpan.setText("1000");
     }
 
