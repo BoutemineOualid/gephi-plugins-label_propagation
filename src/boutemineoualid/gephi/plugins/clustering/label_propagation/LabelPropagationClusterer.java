@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Random;
 import org.gephi.clustering.api.Cluster;
 import org.gephi.clustering.spi.Clusterer;
+import org.gephi.graph.api.Edge;
 import org.gephi.graph.api.Graph;
 import org.gephi.graph.api.GraphModel;
 import org.gephi.graph.api.Node;
@@ -46,11 +47,12 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
     Map<Node, Color> nodeClusterMappings = new HashMap<Node, Color>();
     Random randomizer = new Random(System.currentTimeMillis());
     GraphColorizer graphColorizer = new GraphColorizer();
-
+    Graph graph;
+    
     @Override
     public void execute(GraphModel gm) {
         this.graphModel = gm;
-        Graph graph = gm.getGraphVisible();
+        graph = gm.getGraphVisible();
         graph.readLock();
         this.isCancelled = false;
         try
@@ -72,8 +74,7 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
 
             // assigning each node to its own cluster
             for(Node node: nodes){
-                Color colorRandomizer = new Color();
-                Color cluster = colorRandomizer.randomize();
+                Color cluster = new Color();
                 nodeClusterMappings.put(node, cluster);
             }
             if (isAnimationEnabled)
@@ -84,7 +85,7 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
             }
 
             // Start the clustering
-            while(!allNodesAssignedToPrevailingClusterInNeighborhood(graph)&& !isCancelled){
+            while(!allNodesAssignedToPrevailingClusterInNeighbourhood(graph)&& !isCancelled){
 
                 // shuffeling the nodes list
                 Collections.shuffle(nodes); 
@@ -99,7 +100,6 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
                         node.getNodeData().setSize(node.getNodeData().getSize() * 1.5f);
                         Thread.sleep(this.animationPauseMilliseconds / 2);
                     }
-                    
                     
                     nodeClusterMappings.put(node, getPrevailingClusterInNeighbourhood(node, graph));
                     if (this.isAnimationEnabled)
@@ -141,10 +141,10 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
         }
     }
       
-    private boolean allNodesAssignedToPrevailingClusterInNeighborhood(Graph graph){
+    private boolean allNodesAssignedToPrevailingClusterInNeighbourhood(Graph graph){
         boolean result = true;
         
-        NodeIterator graphNodesIterator = this.graphModel.getGraph().getNodes().iterator();
+        NodeIterator graphNodesIterator = this.graph.getNodes().iterator();
         
         while (graphNodesIterator.hasNext() && result && !isCancelled)
         {
@@ -197,12 +197,13 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
         ArrayList<Cluster> clustersResult = new ArrayList<Cluster>();
         for(Map.Entry<Color, List<Node>> clusterNodes:clusters.entrySet()) {
             String clusterName = clusterNodes.getKey().getColorAsInt().toString();
-            LabelPropagationCluster cluster = new LabelPropagationCluster(clusterNodes.getValue(), clusterName, clusterNodes.getKey());
+            LabelPropagationCluster cluster = new LabelPropagationCluster(clusterNodes.getValue(),
+                                                                                    clusterName, clusterNodes.getKey());
             clustersResult.add(cluster);
         }
         return clustersResult;
     }
-
+    
     @Override
     public Cluster[] getClusters() {
         if (result == null || result.isEmpty()) {

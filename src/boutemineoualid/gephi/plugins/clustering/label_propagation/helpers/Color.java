@@ -28,6 +28,7 @@ public final class Color {
         return this;
     }
 
+
     private void hsvToRgb(float h, float s, float v) {
         int hh = (int) (h * 6);
         float f = (h * 6 - hh);

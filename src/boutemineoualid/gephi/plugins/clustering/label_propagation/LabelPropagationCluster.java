@@ -12,11 +12,11 @@ import org.gephi.graph.api.Node;
  */
 public class LabelPropagationCluster implements Cluster {
 
-  private List<Node> nodes = new ArrayList<Node>();
-  private String name = "untitled";
-  private Color color;
-  
-  private Node metaNode = null;
+    private List<Node> nodes = new ArrayList<Node>();
+    private String name = "untitled";
+    private Color color;
+
+    private Node metaNode = null;
 
     public LabelPropagationCluster(List<Node> nodes, String name, Color color)
     {
