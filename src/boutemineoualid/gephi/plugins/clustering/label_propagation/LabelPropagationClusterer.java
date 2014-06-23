@@ -84,31 +84,31 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
                 this.progress.progress(NbBundle.getMessage(LabelPropagationClusterer.class, "LabelPropagationClusterer.buildingClusters"));
             }
 
+			long waitPause = this.animationPauseMilliseconds / 2;
+
             // Start the clustering
             while(!allNodesAssignedToPrevailingClusterInNeighbourhood(graph)&& !isCancelled){
 
-                // shuffeling the nodes list
+                // shuffling the nodes list
                 Collections.shuffle(nodes); 
 
-                for(Node node:nodes){
+                for(Node node:nodes) {
                     if (isCancelled)
                         break;
     
-                    if (this.isAnimationEnabled)
-                    {
+                    if (this.isAnimationEnabled) {
                         // highlighting the node.
                         node.getNodeData().setSize(node.getNodeData().getSize() * 1.5f);
-                        Thread.sleep(this.animationPauseMilliseconds / 2);
+                        Thread.sleep(waitPause);
                     }
                     
                     nodeClusterMappings.put(node, getPrevailingClusterInNeighbourhood(node, graph));
-                    if (this.isAnimationEnabled)
-                    {
+                    if (this.isAnimationEnabled) {
                         Color cluster = nodeClusterMappings.get(node);
                         graphColorizer.colorizeNode(node, cluster);
-                        Thread.sleep(this.animationPauseMilliseconds / 2);
+                        Thread.sleep(waitPause);
                         NodeData nodeData = node.getNodeData();
-                        nodeData.setSize(node.getNodeData().getSize() / 1.5f);
+                        nodeData.setSize(nodeData.getSize() / 1.5f);
                     }
                 }
             }
@@ -119,8 +119,7 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
                 this.progress.finish(NbBundle.getMessage(LabelPropagationClusterer.class, "LabelPropagationClusterer.finished"));
             }
         }
-        catch (Exception ex)
-        {
+        catch (Exception ex) {
             ex.printStackTrace();
         }
         finally{
@@ -146,8 +145,7 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
         
         NodeIterator graphNodesIterator = this.graph.getNodes().iterator();
         
-        while (graphNodesIterator.hasNext() && result && !isCancelled)
-        {
+        while (graphNodesIterator.hasNext() && result && !isCancelled) {
             Node currentNode = graphNodesIterator.next();
             result = nodeClusterMappings.get(currentNode) == getPrevailingClusterInNeighbourhood(currentNode, graph);
         }
@@ -173,7 +171,7 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
             return this.nodeClusterMappings.get(node); // no clusters in neighbourhood.
         
 
-        // picking the cluster with the heighest weight, if the clusters have the same weight, pick one randomly.
+        // picking the cluster with the highest weight, if the clusters have the same weight, pick one randomly.
         // Shuffling the clusters list and picking the cluster with the highest weight, this will help if more than two clusters share the same weight.
         neighborClusterWeights = MapUtils.shuffle(neighborClusterWeights, randomizer);
         Integer maxWeight = Collections.max(neighborClusterWeights.values());
