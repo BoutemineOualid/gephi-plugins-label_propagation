@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Random;
 import org.gephi.clustering.api.Cluster;
 import org.gephi.clustering.spi.Clusterer;
-import org.gephi.graph.api.Edge;
 import org.gephi.graph.api.Graph;
 import org.gephi.graph.api.GraphModel;
 import org.gephi.graph.api.Node;
@@ -83,43 +82,46 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
             if (progress != null) {
                 this.progress.progress(NbBundle.getMessage(LabelPropagationClusterer.class, "LabelPropagationClusterer.buildingClusters"));
             }
-
-			long waitPause = this.animationPauseMilliseconds / 2;
+            
+            long waitPause = this.animationPauseMilliseconds / 2;
 
             // Start the clustering
-            while(!allNodesAssignedToPrevailingClusterInNeighbourhood(graph)&& !isCancelled){
+            while(!allNodesAssignedToPrevailingClusterInNeighbourhood()&& !isCancelled){
 
-                // shuffling the nodes list
+                // shuffeling the nodes list
                 Collections.shuffle(nodes); 
 
-                for(Node node:nodes) {
+                for(Node node:nodes){
                     if (isCancelled)
                         break;
     
-                    if (this.isAnimationEnabled) {
+                    if (this.isAnimationEnabled)
+                    {
                         // highlighting the node.
                         node.getNodeData().setSize(node.getNodeData().getSize() * 1.5f);
                         Thread.sleep(waitPause);
                     }
                     
-                    nodeClusterMappings.put(node, getPrevailingClusterInNeighbourhood(node, graph));
-                    if (this.isAnimationEnabled) {
+                    nodeClusterMappings.put(node, getPrevailingClusterInNeighbourhood(node));
+                    if (this.isAnimationEnabled)
+                    {
                         Color cluster = nodeClusterMappings.get(node);
                         graphColorizer.colorizeNode(node, cluster);
                         Thread.sleep(waitPause);
                         NodeData nodeData = node.getNodeData();
-                        nodeData.setSize(nodeData.getSize() / 1.5f);
+                        nodeData.setSize(node.getNodeData().getSize() / 1.5f);
                     }
                 }
             }
 
-            PrepareResults();
+            prepareResults();
 
             if (progress != null) {
                 this.progress.finish(NbBundle.getMessage(LabelPropagationClusterer.class, "LabelPropagationClusterer.finished"));
             }
         }
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             ex.printStackTrace();
         }
         finally{
@@ -127,7 +129,7 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
         }
     }
     
-    private void PrepareResults()
+    private void prepareResults()
     {
         // Preparing the results.
         if (progress != null) {
@@ -140,19 +142,20 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
         }
     }
       
-    private boolean allNodesAssignedToPrevailingClusterInNeighbourhood(Graph graph){
+    private boolean allNodesAssignedToPrevailingClusterInNeighbourhood(){
         boolean result = true;
         
         NodeIterator graphNodesIterator = this.graph.getNodes().iterator();
         
-        while (graphNodesIterator.hasNext() && result && !isCancelled) {
+        while (graphNodesIterator.hasNext() && result && !isCancelled)
+        {
             Node currentNode = graphNodesIterator.next();
-            result = nodeClusterMappings.get(currentNode) == getPrevailingClusterInNeighbourhood(currentNode, graph);
+            result = nodeClusterMappings.get(currentNode) == getPrevailingClusterInNeighbourhood(currentNode);
         }
         return result;
     }
     
-    private Color getPrevailingClusterInNeighbourhood(Node node, Graph graph){
+    private Color getPrevailingClusterInNeighbourhood(Node node){
         NodeIterator neighborNodes = graph.getNeighbors(node).iterator();
         Map<Color, Integer> neighborClusterWeights = new HashMap<Color, Integer>();
         
@@ -171,7 +174,7 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
             return this.nodeClusterMappings.get(node); // no clusters in neighbourhood.
         
 
-        // picking the cluster with the highest weight, if the clusters have the same weight, pick one randomly.
+        // picking the cluster with the heighest weight, if the clusters have the same weight, pick one randomly.
         // Shuffling the clusters list and picking the cluster with the highest weight, this will help if more than two clusters share the same weight.
         neighborClusterWeights = MapUtils.shuffle(neighborClusterWeights, randomizer);
         Integer maxWeight = Collections.max(neighborClusterWeights.values());
