@@ -1,8 +1,8 @@
 gephi-plugins-label_propagation
 ===============================
 
-A gephi plugin that provides an implementation of the label propagation graph clustering algorithm described in (1).  The plugin supports animated propagation of cluster labels over graph nodes for educational purpose.
-The current implementation lacks defensive/offensive label propagation support (2) which improves the performance of the clustering process.
+A gephi plugin that provides an implementation of the label propagation graph clustering algorithm described in (1).  The plugin supports animated propagation of cluster labels over the graph nodes for educational purpose.
+The current implementation lacks defensive/offensive propagation support (2) which improves the performance of the clustering process.
 
 NBM binary can be downloaded from this link : https://marketplace.gephi.org/plugin/label-propagation-clustering/
 
