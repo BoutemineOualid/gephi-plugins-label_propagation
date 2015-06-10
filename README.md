@@ -2,7 +2,8 @@ gephi-plugins-label_propagation
 ===============================
 
 A gephi plugin that provides an implementation for label propagation (LPA) graph clustering algorithm described in (1).  The plugin supports animated propagation of cluster labels over the graph nodes for educational purpose.
-The current implementation does not support weights and directions of nodes and lacks defensive/offensive propagation support (2) which improves the performance of the clustering process.
+The current implementation does not support weights and directions of edges and lacks defensive/offensive propagation support (2) which improves the performance of the clustering process.
+Several LPA variants can be implemented but this plugin only implements the original version.
 
 The NBM binary can be downloaded from this link : https://marketplace.gephi.org/plugin/label-propagation-clustering/
 
