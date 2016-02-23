@@ -6,9 +6,10 @@ The plugin supports animated propagation of cluster labels for educational purpo
 
 Change log
 ===========
-Version 2 : - Added support for two more LPA algorithms.
-              - Added support for weighted graphs.
-              - Fixed minor issues in the original implementation.
+Version 2 : 
+- Added support for two more LPA algorithms.
+- Added support for weighted graphs.
+- Fixed minor issues in the original implementation.
 
 References
 ===========
