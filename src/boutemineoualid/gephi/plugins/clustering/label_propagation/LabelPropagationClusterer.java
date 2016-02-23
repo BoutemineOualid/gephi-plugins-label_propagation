@@ -1,5 +1,7 @@
 package boutemineoualid.gephi.plugins.clustering.label_propagation;
 
+import boutemineoualid.gephi.plugins.clustering.label_propagation.PropagationRules.LPAPropagationRule;
+import boutemineoualid.gephi.plugins.clustering.label_propagation.PropagationRules.PropagationRuleBase;
 import boutemineoualid.gephi.plugins.clustering.label_propagation.helpers.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,42 +19,61 @@ import org.gephi.graph.api.NodeIterator;
 import org.gephi.utils.longtask.spi.LongTask;
 import org.gephi.utils.progress.ProgressTicket;
 import org.openide.util.NbBundle;
+
 /**
- *
+ * Provides a the shared logic for LPA-based clustering algorithms. The user has to specify which propagation rule he's willing to use.
  * @author Oualid Boutemine <boutemine.oualid@courrier.uqam.ca>
  */
 public class LabelPropagationClusterer implements Clusterer, LongTask {
 
-    public LabelPropagationClusterer()
-    {}
-    
-    public LabelPropagationClusterer(boolean isAnimationEnabled, long animationPauseMilliseconds)
-    {
-        this.isAnimationEnabled = isAnimationEnabled;
-        this.animationPauseMilliseconds = animationPauseMilliseconds;
-    }
-    
     boolean isAnimationEnabled = false;
     long animationPauseMilliseconds = 0;
+    PropagationRuleBase propagationRule = new LPAPropagationRule(this);
+
+    public LabelPropagationClusterer(){this.randomizer = new Random(System.currentTimeMillis());
+}
     
-    private List<Cluster> result = new ArrayList<Cluster>();
+    public LabelPropagationClusterer(boolean isAnimationEnabled, long animationPauseMilliseconds, PropagationRuleBase propagationRule){
+        this.randomizer = new Random(System.currentTimeMillis());
+        this.isAnimationEnabled = isAnimationEnabled;
+        this.animationPauseMilliseconds = animationPauseMilliseconds;
+        this.propagationRule = propagationRule;
+    }
+    
+    
     public static final String PLUGIN_NAME = "Label Propagation";
-    public static final String PLUGIN_DESCRIPTION = "Label Propagation Clustering Algorithm";
+    public static final String PLUGIN_DESCRIPTION = "A plugin that provides an implementation of 3 label propagation-based clustering algorithms.";
     ProgressTicket progress = null;
-    boolean isCancelled = false;
-    private GraphModel graphModel = null;
+
     
-    // Colors values are the clusters.
-    Map<Node, Color> nodeClusterMappings = new HashMap<Node, Color>();
-    Random randomizer = new Random(System.currentTimeMillis());
+    private boolean isCancelled = false;
+    public boolean getIsCancelled(){
+        return isCancelled;
+    }
+    
+    private Graph graph;
+    public Graph getGraph(){
+        return graph;
+    }
+
+    private Random randomizer;
+    public Random getRandomizer(){
+        return randomizer;
+    }
+    
+    // Each cluster is represented through a unique color object.
+    private List<Cluster> result = new ArrayList<Cluster>();
+    private Map<Node, Color> nodeClusterMapping = new HashMap<Node, Color>();
+    public Map<Node, Color> getNodeClusterMapping(){
+        return nodeClusterMapping;
+    }
+    
     GraphColorizer graphColorizer = new GraphColorizer();
-    Graph graph;
-    
+        
     @Override
     public void execute(GraphModel gm) {
-        this.graphModel = gm;
-        graph = gm.getGraphVisible();
-        graph.readLock();
+        this.graph = gm.getGraphVisible();
+        this.graph.readLock();
         this.isCancelled = false;
         try
         {
@@ -61,23 +82,21 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
                 this.progress.start();
             }
 
-            // Label Propagation clustering logic.
+            // 1. assigning each node to its own cluster.
             NodeIterator iterator = graph.getNodes().iterator();
-
             List<Node> nodes = new ArrayList<Node>();
-            // assigning each node to its proper cluster.
+            // extracting the nodes list.
             while (iterator.hasNext()){
                 Node currentNode = iterator.next();
                 nodes.add(currentNode);
             }
-
-            // assigning each node to its own cluster
+            // creating singleton clusters.
             for(Node node: nodes){
                 Color cluster = new Color();
-                nodeClusterMappings.put(node, cluster);
+                nodeClusterMapping.put(node, cluster);
             }
             if (isAnimationEnabled)
-                graphColorizer.colorizeNodes(nodeClusterMappings);
+                graphColorizer.colorizeNodes(nodeClusterMapping);
             
             if (progress != null) {
                 this.progress.progress(NbBundle.getMessage(LabelPropagationClusterer.class, "LabelPropagationClusterer.buildingClusters"));
@@ -85,12 +104,13 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
             
             long waitPause = this.animationPauseMilliseconds / 2;
 
-            // Start the clustering
-            while(!allNodesAssignedToPrevailingClusterInNeighbourhood()&& !isCancelled){
+            // Start the clustering process
+            while(!this.propagationRule.allNodesAssignedToDominantClusterInNeighbourhood() && !isCancelled){
 
                 // shuffeling the nodes list
                 Collections.shuffle(nodes); 
 
+                // assigning the nodes to the most dominant clusters in their neighborhood according to the selected propagation rule.
                 for(Node node:nodes){
                     if (isCancelled)
                         break;
@@ -102,10 +122,11 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
                         Thread.sleep(waitPause);
                     }
                     
-                    nodeClusterMappings.put(node, getPrevailingClusterInNeighbourhood(node));
+                    // updating the current membership of the node according to the selected propagation rule. 
+                    nodeClusterMapping.put(node, this.propagationRule.getDominantClusterInNeighbourhood(node));
                     if (this.isAnimationEnabled)
                     {
-                        Color cluster = nodeClusterMappings.get(node);
+                        Color cluster = nodeClusterMapping.get(node);
                         graphColorizer.colorizeNode(node, cluster);
                         Thread.sleep(waitPause);
                         NodeData nodeData = node.getNodeData();
@@ -136,55 +157,17 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
             this.progress.progress(NbBundle.getMessage(LabelPropagationClusterer.class, "LabelPropagationClusterer.preparingResults"));
         }
         
-        result = getResultingClusters(nodeClusterMappings);
+        // regroup nodes into separate groups based on their labels
+        result = getResultingClusters(nodeClusterMapping);
         if (result != null && result.size() > 0 && !isAnimationEnabled) {
             graphColorizer.colorizeGraph(result.toArray(new LabelPropagationCluster[0]));
         }
     }
-      
-    private boolean allNodesAssignedToPrevailingClusterInNeighbourhood(){
-        boolean result = true;
-        
-        NodeIterator graphNodesIterator = this.graph.getNodes().iterator();
-        
-        while (graphNodesIterator.hasNext() && result && !isCancelled)
-        {
-            Node currentNode = graphNodesIterator.next();
-            result = nodeClusterMappings.get(currentNode) == getPrevailingClusterInNeighbourhood(currentNode);
-        }
-        return result;
-    }
     
-    private Color getPrevailingClusterInNeighbourhood(Node node){
-        NodeIterator neighborNodes = graph.getNeighbors(node).iterator();
-        Map<Color, Integer> neighborClusterWeights = new HashMap<Color, Integer>();
-        
-        // Calculating the weights of clusters in the neighbourhood of the node.
-        while(neighborNodes.hasNext() && !isCancelled){
-            Node currentNeighbor = neighborNodes.next();
-            Color neighborsCluster = this.nodeClusterMappings.get(currentNeighbor);
-            Integer clusterWeight = 1;
-            if (neighborClusterWeights.containsKey(neighborsCluster)) {
-                clusterWeight += neighborClusterWeights.get(neighborsCluster);
-            }
-            neighborClusterWeights.put(neighborsCluster, clusterWeight);
-        }
-        
-        if (neighborClusterWeights.isEmpty())
-            return this.nodeClusterMappings.get(node); // no clusters in neighbourhood.
-        
-
-        // picking the cluster with the heighest weight, if the clusters have the same weight, pick one randomly.
-        // Shuffling the clusters list and picking the cluster with the highest weight, this will help if more than two clusters share the same weight.
-        neighborClusterWeights = MapUtils.shuffle(neighborClusterWeights, randomizer);
-        Integer maxWeight = Collections.max(neighborClusterWeights.values());
-        return MapUtils.getKeyByValue(neighborClusterWeights, maxWeight);
-    }    
-    
-    private List<Cluster> getResultingClusters(Map<Node, Color> nodeClusterMappings)
+    private List<Cluster> getResultingClusters(Map<Node, Color> nodeClusterMapping)
     {
         Map<Color,List<Node>> clusters = new HashMap<Color, List<Node>>();
-        for(Map.Entry<Node, Color> nodesCluster : nodeClusterMappings.entrySet()) {
+        for(Map.Entry<Node, Color> nodesCluster : nodeClusterMapping.entrySet()) {
             List<Node> clusterNodes = new ArrayList<Node>();
             Color cluster = nodesCluster.getValue();
             if (clusters.containsKey(cluster)) {
@@ -231,5 +214,9 @@ public class LabelPropagationClusterer implements Clusterer, LongTask {
 
     void setAnimationPauseMilliseconds(long animationPauseMilliseconds) {
         this.animationPauseMilliseconds = animationPauseMilliseconds;
+    }
+
+    void setPropagationRule(PropagationRuleBase propagationRule) {
+        this.propagationRule = propagationRule;
     }
 }

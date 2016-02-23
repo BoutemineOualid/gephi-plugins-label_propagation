@@ -40,9 +40,43 @@ public final class LabelPropagationSettingsPanel extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        jPanel1 = new javax.swing.JPanel();
+        btnLPArRule = new javax.swing.JRadioButton();
+        btnLPARule = new javax.swing.JRadioButton();
+        lblResolutionParameter = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        btnLPAmRule = new javax.swing.JRadioButton();
+        txtResolutionParameter = new javax.swing.JTextField();
         chkAnimateLabelPropagation = new javax.swing.JCheckBox();
         lblAnimationTimeSpan = new javax.swing.JLabel();
         txtAnimationTimeSpan = new javax.swing.JFormattedTextField();
+
+        buttonGroup1.add(btnLPArRule);
+        org.openide.awt.Mnemonics.setLocalizedText(btnLPArRule, org.openide.util.NbBundle.getMessage(LabelPropagationSettingsPanel.class, "LabelPropagationSettingsPanel.btnLPArRule.text")); // NOI18N
+
+        buttonGroup1.add(btnLPARule);
+        btnLPARule.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(btnLPARule, org.openide.util.NbBundle.getMessage(LabelPropagationSettingsPanel.class, "LabelPropagationSettingsPanel.btnLPARule.text")); // NOI18N
+        btnLPARule.setActionCommand(org.openide.util.NbBundle.getMessage(LabelPropagationSettingsPanel.class, "LabelPropagationSettingsPanel.btnLPARule.actionCommand")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(lblResolutionParameter, org.openide.util.NbBundle.getMessage(LabelPropagationSettingsPanel.class, "LabelPropagationSettingsPanel.lblResolutionParameter.text")); // NOI18N
+        lblResolutionParameter.setEnabled(false);
+        lblResolutionParameter.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
+        lblResolutionParameter.setVerticalTextPosition(javax.swing.SwingConstants.TOP);
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(LabelPropagationSettingsPanel.class, "LabelPropagationSettingsPanel.jLabel1.text")); // NOI18N
+
+        buttonGroup1.add(btnLPAmRule);
+        org.openide.awt.Mnemonics.setLocalizedText(btnLPAmRule, org.openide.util.NbBundle.getMessage(LabelPropagationSettingsPanel.class, "LabelPropagationSettingsPanel.btnLPAmRule.text")); // NOI18N
+        btnLPAmRule.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                btnLPAmRuleStateChanged(evt);
+            }
+        });
+
+        txtResolutionParameter.setText(org.openide.util.NbBundle.getMessage(LabelPropagationSettingsPanel.class, "LabelPropagationSettingsPanel.txtResolutionParameter.text")); // NOI18N
+        txtResolutionParameter.setEnabled(false);
 
         org.openide.awt.Mnemonics.setLocalizedText(chkAnimateLabelPropagation, org.openide.util.NbBundle.getMessage(LabelPropagationSettingsPanel.class, "LabelPropagationSettingsPanel.chkAnimateLabelPropagation.text")); // NOI18N
         chkAnimateLabelPropagation.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -65,33 +99,75 @@ public final class LabelPropagationSettingsPanel extends JPanel {
         txtAnimationTimeSpan.setToolTipText(org.openide.util.NbBundle.getMessage(LabelPropagationSettingsPanel.class, "LabelPropagationSettingsPanel.txtAnimationTimeSpan.toolTipText")); // NOI18N
         txtAnimationTimeSpan.setEnabled(false);
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(txtAnimationTimeSpan, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(55, 55, 55))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(lblAnimationTimeSpan)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(39, 39, 39)
+                                    .addComponent(jLabel1)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txtResolutionParameter, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(45, 45, 45)
+                                    .addComponent(lblResolutionParameter, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(btnLPArRule, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addComponent(btnLPARule, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+                                    .addComponent(btnLPAmRule, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addComponent(chkAnimateLabelPropagation, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGap(0, 0, Short.MAX_VALUE)))
+                    .addContainerGap()))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(313, Short.MAX_VALUE)
+                .addComponent(txtAnimationTimeSpan, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblAnimationTimeSpan, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(1, 1, 1)
+                    .addComponent(btnLPArRule, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(btnLPARule, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(btnLPAmRule, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(txtResolutionParameter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1))
+                    .addGap(18, 18, 18)
+                    .addComponent(chkAnimateLabelPropagation)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(lblResolutionParameter, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap()))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(chkAnimateLabelPropagation)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(lblAnimationTimeSpan, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(txtAnimationTimeSpan, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(chkAnimateLabelPropagation)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblAnimationTimeSpan, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtAnimationTimeSpan, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(347, 347, 347))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -100,10 +176,23 @@ public final class LabelPropagationSettingsPanel extends JPanel {
         lblAnimationTimeSpan.setEnabled(chkAnimateLabelPropagation.isSelected());
     }//GEN-LAST:event_chkAnimateLabelPropagationStateChanged
 
+    private void btnLPAmRuleStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_btnLPAmRuleStateChanged
+        txtResolutionParameter.setEnabled(btnLPAmRule.isSelected());
+        lblResolutionParameter.setEnabled(btnLPAmRule.isSelected());
+    }//GEN-LAST:event_btnLPAmRuleStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JRadioButton btnLPARule;
+    public javax.swing.JRadioButton btnLPAmRule;
+    public javax.swing.JRadioButton btnLPArRule;
+    private javax.swing.ButtonGroup buttonGroup1;
     public javax.swing.JCheckBox chkAnimateLabelPropagation;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblAnimationTimeSpan;
+    public javax.swing.JLabel lblResolutionParameter;
     public javax.swing.JFormattedTextField txtAnimationTimeSpan;
+    public javax.swing.JTextField txtResolutionParameter;
     // End of variables declaration//GEN-END:variables
 
     void writeProperties(java.util.Properties p) {
