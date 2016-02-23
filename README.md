@@ -6,11 +6,12 @@ The plugin supports animated propagation of cluster labels for educational purpo
 
 Change log:
 ===========
-Version 1.1 : - Added support for two more LPA algorithms.
+Version 2 : - Added support for two more LPA algorithms.
               - Added support for weighted graphs.
               - Fixed minor issues in the original implementation.
 
--
+References:
+===========
 1. Raghavan, U. N., Albert, R., & Kumara, S. (2007). Near linear time algorithm to detect community structures in large-scale networks. Physical Review E, 76(3), 036106.
 
 2. Barber, Michael J., and John W. Clark. Detecting network communities by propagating labels under constraints. Physical Review E 80.2 (2009): 026129.
