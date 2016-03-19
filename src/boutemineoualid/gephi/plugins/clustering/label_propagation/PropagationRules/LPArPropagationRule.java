@@ -36,8 +36,9 @@ public class LPArPropagationRule extends PropagationRuleBase {
      */
     @Override
     public Color getDominantClusterInNeighbourhood(Node node) {
-        
         Set<Node> neighbors = IteratorUtils.toSet(this.LPAClusteringEngine.getGraph().getNeighbors(node).iterator());
+        if (neighbors.isEmpty())
+            return this.LPAClusteringEngine.getNodeClusterMapping().get(node); // no clusters in neighbourhood, a disconnected node.
 
         Map<Color, Double> neighborClusterWeights = new HashMap<Color, Double>();
         
@@ -57,10 +58,6 @@ public class LPArPropagationRule extends PropagationRuleBase {
             }
             neighborClusterWeights.put(neighboringCluster, clusterWeight);
         }
-        
-        if (neighborClusterWeights.isEmpty())
-            return this.LPAClusteringEngine.getNodeClusterMapping().get(node); // no clusters in neighbourhood, a disconnected node.
-        
 
         // picking the cluster with the heighest weight. In case two or more clusters exhibit the same weight, the LPA rule must pick a random one from the dominant group.
         // Shuffling the clusters list and picking the cluster with the highest weight.
