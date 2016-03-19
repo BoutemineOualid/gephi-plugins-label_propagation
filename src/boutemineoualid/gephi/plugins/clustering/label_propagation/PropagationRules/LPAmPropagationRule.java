@@ -41,13 +41,12 @@ public class LPAmPropagationRule extends PropagationRuleBase {
     public Color getDominantClusterInNeighbourhood(Node node) {
         
         Set<Node> neighbors = IteratorUtils.toSet(this.LPAClusteringEngine.getGraph().getNeighbors(node).iterator());
-
-        Map<Color, Double> neighborClusterWeights = new HashMap<Color, Double>();
         Color currentNodeCluster = this.LPAClusteringEngine.getNodeClusterMapping().get(node);
         
         if (neighbors.isEmpty())
-            return this.LPAClusteringEngine.getNodeClusterMapping().get(node); // no clusters in neighbourhood, a disconnected node.
+            return currentNodeCluster; // no clusters in neighbourhood, a disconnected node.
         
+        Map<Color, Double> neighborClusterWeights = new HashMap<Color, Double>();
         // Calculating the clusters' weights in the neighbourhood of the processed node.
         for(Node currentNeighbor:neighbors){
             if (this.LPAClusteringEngine.getIsCancelled())
