@@ -32,9 +32,9 @@ public class LPAmPropagationRule extends PropagationRuleBase {
         return ResolutionParameter;
     }
     /**
-     * This rule selects the most frequent cluster label amongst the neighbors of the processed node as its new cluster. 
-     * The frequency is calculated based on the total weight of links connecting the neighbors bearing the same cluster label.
-     * In case two or more labels are equally frequent, the rule selects a random one from the dominant group provided that the processed node 
+     * This rule selects the mostdominant cluster label amongst the neighbors of the processed node as its new cluster. 
+     * The frequency is calculated based on the induced improvement in the modularity of the partition that results from the change of affiliation of the processed node.
+     * In case two or more labels are equally dominant, the rule selects a random one from the dominant group provided that the processed node 
      * is not already bearing a dominant one. In such a case, the rule keeps the current label of the processed node.
      */
     @Override
@@ -53,7 +53,7 @@ public class LPAmPropagationRule extends PropagationRuleBase {
                 break;
             
             Color neighboringCluster = this.LPAClusteringEngine.getNodeClusterMapping().get(currentNeighbor);
-            // Calculating the cluster weight according to the rule (Au - lambda.kv.ku + lambda.k²v) where lambda 
+            // Calculating the cluster weight according to the rule (A_u - lambda*k_v*k_u + lambda*k²_v) where lambda 
             // is the resolution parameter, v the processed node and u is the current neighbor.
             double clusterWeight = this.LPAClusteringEngine.getGraph().getEdge(node, currentNeighbor).getWeight();
             clusterWeight -= ResolutionParameter * this.LPAClusteringEngine.getGraph().getDegree(node) * this.LPAClusteringEngine.getGraph().getDegree(currentNeighbor);
