@@ -14,8 +14,8 @@ public class GraphColorizer {
 
 
         for (LabelPropagationCluster cluster : graphClusters) {
+            Color color = cluster.getColor();
             for (Node node : cluster.getNodes()) {
-                Color color = cluster.getColor();
                 colorizeNode(node, color);
             }
         }
