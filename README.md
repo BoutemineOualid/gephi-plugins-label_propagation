@@ -2,7 +2,7 @@ gephi-plugins-label_propagation
 ===============================
 
 A gephi plugin that provides an implementation for several Label Propagation-based algorithms (LPA) for community detection in graphs. 
-The plugin supports animated propagation of cluster labels for educational purpose. In addition, the current implementation supports weighted edges and provides implementations for three LPA variants including the basic one. The 3 variants currently implemented are : basic LPA (1), randomized LPA (LPAr) (2) and modularity maximization LPA (LPAm) (2). Each variant is described by a specific propagation rule that guides the search for the best partition of the network. The NBM binary can be downloaded from this link : https://marketplace.gephi.org/plugin/label-propagation-clustering/
+The plugin supports animated propagation of cluster labels for educational purpose. In addition, the current implementation supports weighted edges and provides implementations for three LPA variants including the basic one. The 3 variants currently implemented are : basic LPA (1), randomized LPA (LPAr) (2) and modularity maximization LPA (LPAm) (2). Each variant is described by a specific propagation rule that guides the search for the best partition of the network. The NBM binary can be downloaded from this link : https://gephi.org/plugins/#/plugin/label-propagation-clustering
 
 Change log
 ===========
